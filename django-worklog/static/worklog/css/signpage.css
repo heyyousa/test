@@ -1,0 +1,99 @@
+body {
+    background-image: url(../img/bg12.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.logobox {
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+    background-image: url(../img/bocross.png);
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 50px;
+    left: 60px;
+}
+
+.signbox {
+    display: inline-block;
+    width: 920px;
+    height: 640px;
+    color: white;
+    background-color: rgba(0,0,0,0.85);
+    position: absolute;
+    top: 190px;
+    left: 580px;
+    border-radius: 20px;
+}
+
+.title1 {
+    font-size: 50px;
+    margin-left: 40px;
+    margin-top: 30px;
+}
+
+#sexbox {
+    display: inline-block;
+    width: 205px;
+    height: 40px;
+    text-align: right;
+}
+
+#sexnan {
+    width: 20px;
+}
+
+#sexnv {
+    width:20px;
+}
+
+#sexbox label {
+  padding-left: 20px;
+}
+
+.textbox {
+    width: 500px;
+    height: 50px;
+    text-align: right;
+    margin-left: 80px;
+    padding: 5px;
+    font-size: 25px;
+}
+
+.signbox input {
+    width: 200px;
+    height: 21px;
+    font-size: 18px;
+}
+
+.textbox select {
+    width: 204px;
+    height: 27px;
+    font-size: 18px;
+}
+
+.buttonbox {
+    width: 830px;
+    height: 60px;
+    margin-top: 30px;
+    margin-left: 110px;
+
+}
+
+.buttonbox input {
+    width: 150px;
+    height: 30px;
+    border: 1px;
+    border-radius: 20px;
+    color: white;
+    font-size: 20px;
+    background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+}
+
+.buttonspan {
+    margin-top: 40px;
+    margin-left: 100px;
+    padding-top: 20px;
+    padding-left: 30px;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'worklog/css/login2.css' %}">
+    <link rel="shortcut icon" href="{% static 'worklog/img/favicon.ico' %}" />
+    <title>登录</title>
+</head>
+
+<body>
+    <div class="bgxuhua">
+        <div class="bgibox">
+            <div class="slgbox">
+                <h2 class="slogan2">一切为了病人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为了病人一切</h2>
+                <h1 class="slogan1">沧 县 医 院</h1>
+            </div>
+        </div>
+        <div class="loginbox">
+            <div class="lgbgbox">
+                <h1 class="title1">LOGIN</h1>
+                <h2 class="title2">Work Log</h2>
+                <div class="inputbox">
+                    <form action="/login/" method="POST">
+                        <div class="inputtext">
+                            <span class="usericon"></span>
+                            <input type="text" class="text" name="userid" placeholder="Username" />
+                        </div>
+                        <div class="inputtext">
+                            <span class="pswicon"></span>
+                            <input type="password" class="text" name="userpsw" placeholder="Password" />
+                        </div>
+                        <div class="buttonbox">
+                            <span class="inputbutton">
+                                <input type="submit" class="button" value="LOGIN" />
+                            </span>
+                            <span class="inputbutton">
+                                <input type="button" class="button" value="SIGN UP">
+                            </span>
+                        </div>
+                        <div style="display: none;">
+                            <input type="text" name="next_url" value="worklog_web/mainpage.html">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'worklog/css/signpage.css' %}">
+    <link rel="shortcut icon" href="{% static 'worklog/img/favicon.ico' %}" />
+    <title>注册</title>
+</head>
+
+<body>
+    <div>
+        <div class="logobox"></div>
+        <div class="signbox">
+            <h1 class="title1">注册</h1>
+            <div style="height: 600px;">
+                <form action="/signup/" method="POST">
+                    <div class="textbox">
+                        <label for="name">姓名</label>
+                        <input type="text" name="name" id="name" maxlength="5">
+                    </div>
+                    <div class="textbox">
+                        <label for="sexbox">性别</label>
+                        <div id="sexbox">
+                            <label for="sexnan">男</label>
+                            <input type="radio" id="sexnan" name="sex" value="1">
+                            <label for="sexnv">女</label>
+                            <input type="radio" name="sex" id="sexnv" value="0">
+                        </div>
+                    </div>
+                    <div class="textbox">
+                        <label for="index">工号</label>
+                        <input type="text" name="id" id="index">
+                    </div>
+                    <div class="textbox">
+                        <label for="psw">密码</label>
+                        <input type="password" name="password" id="psw">
+                    </div>
+                    <div class="textbox">
+                        <label for="cfmpsw">确认密码</label>
+                        <input type="password" id="cfmpsw">
+                    </div>
+                    <div class="textbox">
+                        <label for="md">所在科室</label>
+                        <select id="md" name="keshi">
+                            <option selected="selected">信息科</option>
+                            <option>六楼护士站</option>
+                            <option>综治科</option>
+                            <option>重症医学科</option>
+                        </select>
+                    </div>
+                    <div class="textbox">
+                        <label for="duty">职务</label>
+                        <select id="duty" name="duty">
+                            <option selected="selected">职员</option>
+                            <option>主任</option>
+                            <option>副主任</option>
+                        </select>
+                    </div>
+                    <div class="buttonbox">
+                        <span class="buttonspan">
+                            <input type="submit" value="注册">
+                        </span>
+                        <span class="buttonspan">
+                            <input type="button" value="取消">
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
