@@ -122,7 +122,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False  # 是否使用美国时间，True时会覆盖掉TIME_ZONE。
 
 
 # Static files (CSS, JavaScript, Images)

@@ -7,5 +7,8 @@ from .models import *
 class UserinfoManager(admin.ModelAdmin):
     list_display = ['id','name','sex','keshi','duty']
 
+class UserworklogManager(admin.ModelAdmin):
+    list_display = ['id','date','needs','place','qsort','qdescribe','fisstatu','note']
+
 admin.site.register(Userinfo,UserinfoManager)
-admin.site.register(Userworklog)
+admin.site.register(Userworklog,UserworklogManager)

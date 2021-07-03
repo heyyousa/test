@@ -1,38 +1,76 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from worklog_web.models import *
-from django.shortcuts import redirect
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse
+from django.db.models import Q
+import datetime
 
 # Create your views here.
 
 def mainpage(request):
-    userworklogs = Userworklog.objects.all()
+    # 从cookie中获取用户ID
+    userid=request.COOKIES.get('userid')
+    # 查与用户ID一致且当月的工作日志
+    userworklogs = Userworklog.objects.filter(Q(id=userid)&Q(date__month=datetime.datetime.now().month))
+    # 获取该ID的用户信息
+    if request.COOKIES.get('userid'):
+        user=Userinfo.objects.get(id=userid)
+    else:
+        pass
+    # 添加日志数据
     if request.method=="POST":
-        if request.POST.get('needs')=="是":
-            userwlneeds =1
-        else:
-            userwlneeds =0
-        userwlid="001"
+        print(1)
+        userwlid=userid
         a=Userworklog.objects.last()
         lindex=int(a.index)
         lindex+=1
         userwlindex=str(lindex).zfill(8)
         userwldate=request.POST.get('date')
+        userwlneeds=request.POST.get('needs')
         userwlks = request.POST.get('place')
         userwlqsort = request.POST.get('qsort')
         userwlqdsb = request.POST.get('qdescribe')
         userwlfst = request.POST.get('fisstatu')
         userwlnote = request.POST.get('note')
         Userworklog.objects.create(id=userwlid,index=userwlindex,date=userwldate,needs=userwlneeds,place=userwlks,qsort=userwlqsort,qdescribe=userwlqdsb,fisstatu=userwlfst,note=userwlnote)
-        return redirect('/worklog_web/mainpage')
+        return HttpResponse('添加成功')
+    # 响应GET请求
     elif request.method=="GET":
-        return render(request, 'worklog_web/mainpage.html', locals())
+        # 判断用户是否登录
+        if request.COOKIES.get('userid'):
+            if request.COOKIES.get('userpsw')==user.password and request.COOKIES.get('userid')==user.id:
+                return render(request, 'worklog_web/mainpage.html', locals())
+            else:
+                resp = redirect('/login/')
+                return resp
+        else:
+            resp=redirect('/login/')
+            return resp
 
 
-def all_user(request):
-    all_user=Userinfo.objects.all()
-    return render(request,'worklog_web/all_user.html',locals())
+def create_log(request):
+    userid = request.COOKIES.get('userid')
+    user = Userinfo.objects.get(id=userid)
+    if request.method=="POST":
+        print(1)
+        userwlid=userid
+        a=Userworklog.objects.last()
+        lindex=int(a.index)
+        lindex+=1
+        userwlindex=str(lindex).zfill(8)
+        userwldate=request.POST.get('date')
+        userwlneeds=request.POST.get('needs')
+        userwlks = request.POST.get('place')
+        userwlqsort = request.POST.get('qsort')
+        userwlqdsb = request.POST.get('qdescribe')
+        userwlfst = request.POST.get('fisstatu')
+        userwlnote = request.POST.get('note')
+        Userworklog.objects.create(id=userwlid,index=userwlindex,date=userwldate,needs=userwlneeds,place=userwlks,qsort=userwlqsort,qdescribe=userwlqdsb,fisstatu=userwlfst,note=userwlnote)
+        userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__month=datetime.datetime.now().month))
+        return render(request,'worklog_web/mainpage.html',locals())
 
-def testvalues(request):
-    userid=Userinfo.objects.filter(id__exact='001')
-    return render(request,'worklog_web/test.html',locals())
+
+def test(request):
+    userid='001'
+    userworklogs = Userworklog.objects.filter(id=userid)
+    user = Userinfo.objects.filter(id=userid)
+    return HttpResponse(locals())

@@ -33,6 +33,10 @@
                         <li>
                             <a href="#">注销</a>
                         </li>
+                        <li>
+                            {{ user.name }}
+                            <!--调用locals()传递进来的字典参数-->
+                        </li>
                     </ul>
                 </center>
             </div>
@@ -40,7 +44,7 @@
     </div>
     <div style="width: 1900px;">
         <div class="logbox">
-            <form class="logtext" style="width: 450px" action="mainpage/" method="POST">
+            <form class="logtext" style="width: 450px" action="/worklog_web/create_log/" method="POST">
                 <div class="loginput">
                     <label for="date">日期</label>
                     <input type="text" name="date" id="date" placeholder="例：2100-1-1">
@@ -96,13 +100,7 @@
                     {% for userwl in userworklogs %}
                     <tr>
                         <td>{{ userwl.date|date:"Y-m-d" }}</td>
-                        <td>
-                            {% if userwl.needs == 1 %}
-                            是
-                            {% else %}
-                            否
-                            {% endif %}
-                        </td>
+                        <td>{{ userwl.needs }}</td>
                         <td>{{ userwl.place }}</td>
                         <td>{{ userwl.qsort }}</td>
                         <td>{{ userwl.qdescribe }}</td>

@@ -5,6 +5,5 @@ from worklog_web import views
 
 urlpatterns = [
     path('mainpage/', views.mainpage),
-    path('all_user/',views.all_user),
-    path('testvalues',views.testvalues)
+    path('create_log/',views.create_log),
 ]
