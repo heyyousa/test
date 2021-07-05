@@ -15,15 +15,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from worklog import views
-from django.urls import include
+
 
 urlpatterns = [
     path('admin/',admin.site.urls),
     path('login/', views.login),
     path('signpage/',views.signpage),
-    path('signup/',views.signup),
     path('testpage/',views.testpage),
     path('worklog_web/',include('worklog_web.urls')),
 ]
