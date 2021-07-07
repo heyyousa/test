@@ -24,15 +24,27 @@ def login(request):
 
         #比对工号和密码正确则登录到mainpage
         if userid==db_userinfo.id and userpsw==db_userinfo.password:
-            response=redirect('/worklog_web/mainpage')
-            response.set_cookie('userid',userid,3600)
-            response.set_cookie('userpsw',userpsw,3600)
-            request.session['userid']=userid
-            return response
+            user=Userinfo.objects.get(id=userid)
+            resp=redirect('/worklog_web/mainpage')
+            resp.set_cookie('userid',userid,60*60*24)
+            resp.set_cookie('userpsw',user.password,2)
+            return resp
         else:
             return render(request,'login2.html')
 
     elif request.method=="GET":
+        #检查session登陆状态,本项目不适用保存登录状态
+        # if request.session.get('userid') and request.session.get('userpsw'):
+        #     return redirect('/worklog_web/mainpage')
+
+        #检查cookie
+        # c_userid=request.COOKIES.get('userid')
+        # c_userpsw=request.COOKIES.get('userpsw')
+        #
+        # if c_userid and c_userpsw:
+        #     request.session['userid']=c_userid
+        #     return  redirect('/worklog_web/mainpage')
+
         return render(request, 'login2.html')
 
 
@@ -66,7 +78,7 @@ def signpage(request):
             print('--create user error %s'%(e))
             return HttpResponse('工号已注册')
 
-        #session
+        #存储session
         request.session['id']=user.id
         request.session['password']=user.userpsw
 

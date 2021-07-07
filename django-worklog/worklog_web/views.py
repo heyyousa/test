@@ -12,20 +12,13 @@ def mainpage(request):
     # 查与用户ID一致且当月的工作日志,且按日期升序排序
     userworklogs = Userworklog.objects.filter(Q(id=userid)&Q(date__month=datetime.datetime.now().month)).order_by('date')
     # 获取该ID的用户信息
-    if request.COOKIES.get('userid'):
-        user=Userinfo.objects.get(id=userid)
-    else:
-        pass
+    user=Userinfo.objects.get(id=userid)
 
     # 响应GET请求
     if request.method=="GET":
-        # 判断用户是否登录
+        # 借用2秒存活时间的cookie防止用户直接进入mainpage
         if request.COOKIES.get('userid'):
-            if request.COOKIES.get('userpsw')==user.password and request.COOKIES.get('userid')==user.id:
-                return render(request, 'worklog_web/mainpage.html', locals())
-            else:
-                resp = redirect('/login/')
-                return resp
+            return render(request, 'worklog_web/mainpage.html', locals())
         else:
             resp=redirect('/login/')
             return resp
@@ -51,9 +44,13 @@ def create_log(request):
         userwlnote = request.POST.get('note')
         Userworklog.objects.create(id=userwlid,index=userwlindex,date=userwldate,needs=userwlneeds,place=userwlks,qsort=userwlqsort,qdescribe=userwlqdsb,fisstatu=userwlfst,note=userwlnote)
         userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__month=datetime.datetime.now().month)).order_by('date')
-        return render(request,'worklog_web/mainpage.html',locals())
+        return redirect('/worklog_web/mainpage')
+        #render(request,'worklog_web/mainpage.html',locals())
 
 
+def logout(request):
+    request.delete_cookie('userid')
+    request.delete_cookie('userpsw')
 def test(request):
     userid='001'
     userworklogs = Userworklog.objects.filter(id=userid)
