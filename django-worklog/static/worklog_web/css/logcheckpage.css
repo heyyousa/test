@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url(../img/mainbg.jpg);
+    background-repeat: no-repeat;
+    background-position: center top;
+}
+
+.float {
+    float: left;
+}
+
+.topbox {
+    background-color: #00000080;
+    width: 100%;
+    height: 90px;
+}
+
+.menubox {
+    height: auto;
+    width: 1500px;
+    margin-left: 0;
+    top: 0;
+    margin-bottom: 5px;
+}
+
+.menubox ul li {
+    color: white;
+    font-size: 30px;
+    font-weight: 500;
+    text-align: center;
+    height: auto;
+    width: 240px;
+    display: inline-block;
+    padding: 6px 20px;
+}
+
+.logo {
+    color: white;
+    font-size: 40px;
+    font-weight: 500;
+    padding: 15px 35px;
+}
+
+body a:link {
+    color: white;
+    text-decoration: none;
+}
+
+body :visited {
+    color: white;
+}
+
+body a:hover {
+    color: rgb(204, 43, 43);
+ }
+
+.logbox {
+    display: inline-block;
+    position: relative;
+    top: -180px;
+    left: -20px;
+    margin-left: 100px;
+    width: 470px;
+    height: 500px;
+    text-align: left;
+}
+
+.logtext {
+    color: white;
+    font-size: 20px;
+}
+
+.loginput {
+    width: 450px;
+    height: 80px;
+}
+
+body input,textarea {
+    width: 290px;
+    font-size: 20px;
+    border: 1px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+label {
+    display: inline-block;
+    width: 90px;
+}
+
+.buttonspan {
+    width: 300px;
+    height: 60px;
+    margin-top: 20px;
+    margin-left: 40px;
+    padding-top: 20px;
+    padding-right: 50px;
+}
+
+.button {
+    border: 0;
+    width: 120px;
+    height: 35px;
+    color: white;
+    border-radius: 20px;
+    background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+}
+
+.notediv {
+    width: 450px;
+    height: 130px;
+}
+
+.chartbox {
+    display: inline-block;
+    width: 1320px;
+    height: 720px;
+    margin-top: 50px;
+    padding-left: 5px;
+    text-align: left;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    background-color: #00000070;
+    border-radius: 20px;
+}
+
+.table {
+    width: 1300px;
+    border-collapse: collapse;
+    font-size: 18px;
+    color: #FFFDE4;
+    text-align: center;
+}

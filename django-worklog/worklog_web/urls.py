@@ -6,4 +6,8 @@ from worklog_web import views
 urlpatterns = [
     path('mainpage/', views.mainpage),
     path('create_log/',views.create_log),
+    path('logout/',views.logout),
+    path('logcheck/',views.logcheck),
+    path('logcheckpage/',views.logcheckpage),
+
 ]

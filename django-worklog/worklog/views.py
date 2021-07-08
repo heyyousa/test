@@ -5,6 +5,7 @@ import hashlib
 
 # Create your views here.
 
+#登录
 def login(request):
     if request.method=="POST":
         userid=request.POST.get('userid')
@@ -47,7 +48,7 @@ def login(request):
 
         return render(request, 'login2.html')
 
-
+#注册
 def signpage(request):
     if request.method=="POST":
         userid = request.POST.get('id')
@@ -61,6 +62,9 @@ def signpage(request):
         #判断两次输入的密码是否一致
         if userpsw!=pswcfm:
             return HttpResponse('两次密码不一致')
+
+        if username=='' or usersex=='' or userpsw=='' or pswcfm=='' or userks=='' or userduty=='':
+            return HttpResponse('所填信息不能为空')
 
         #判断工号是否重复，该方式解决不了高并发
         # if Userinfo.objects.filter(id=userid):
@@ -79,8 +83,8 @@ def signpage(request):
             return HttpResponse('工号已注册')
 
         #存储session
-        request.session['id']=user.id
-        request.session['password']=user.userpsw
+        # request.session['id']=user.id
+        # request.session['password']=user.userpsw
 
         return redirect('/login/')
 

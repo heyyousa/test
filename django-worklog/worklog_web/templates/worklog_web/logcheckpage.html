@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'worklog_web/css/mainpage.css' %}" />
+    <link rel="stylesheet" href="{% static 'worklog_web/css/logcheckpage.css' %}" />
     <link rel="shortcut icon" href="{% static 'worklog_web/img/favicon.ico' %}" />
-    <title>沧县医院WORKLOG</title>
+    <title>日志查询</title>
 </head>
 
 <body>
     <div class="topbox float">
         <div class="logo float">
             <span>
-                <a href="#">沧县医院</a>
+                <a href="/worklog_web/mainpage">沧县医院</a>
             </span>
         </div>
         <div class="float">
@@ -22,7 +22,7 @@
                 <center>
                     <ul>
                         <li>
-                            <a href="/worklog_web/logcheckpage">工作日志</a>
+                            <a href="#">工作日志</a>
                         </li>
                         <li>
                             <a href="#">设置</a>
@@ -44,38 +44,32 @@
     </div>
     <div style="width: 1900px;">
         <div class="logbox">
-            <form class="logtext" style="width: 450px" action="/worklog_web/create_log/" method="POST">
+            <form class="logtext" style="width: 450px" action="/worklog_web/logcheck/" method="POST">
                 <div class="loginput">
-                    <label for="date">日期</label>
-                    <input type="text" name="date" id="date" placeholder="例：2100-1-1">
+                    <label for="sdate">起始日期</label>
+                    <input type="text" name="sdate" id="sdate" placeholder="例：2100-1-1">
+
                 </div>
                 <div class="loginput">
-                    <label for="need">系统需求</label>
-                    <input type="text" name="needs" id="need" placeholder="是或否（不填默认否）">
+                    <label for="fdate">截至日期</label>
+                    <input type="text" name="fdate" id="year">
+
                 </div>
                 <div class="loginput">
                     <label for="place">问题科室</label>
                     <input type="text" name="place" id="place">
                 </div>
                 <div class="loginput">
-                    <label for="qtype">问题类型</label>
-                    <input type="text" name="qsort" id="qtype">
+                    <label for="needs">系统需求</label>
+                    <input type="text" name="needs" id="needs" placeholder="是或否，不填默认否">
                 </div>
                 <div class="loginput">
-                    <label for="qscript">问题简述</label>
-                    <input type="text" name="qdescribe" id="qscript" placeholder="不超过20字">
-                </div>
-                <div class="loginput">
-                    <label for="status">完成情况</label>
-                    <input type="text" name="fisstatu" id="status">
-                </div>
-                <div class="notediv">
-                    <label for="note">备注</label>
-                    <textarea name="note" id="note" cols="30" rows="3" placeholder="选填不超过30字"></textarea>
+                    <label for="qsort">问题类型</label>
+                    <input type="text" name="qsort" id="qsort">
                 </div>
                 <div class="loginput">
                     <span class="buttonspan">
-                        <input type="submit" class="button" id="" value="添加">
+                        <input type="submit" class="button" id="" value="查找">
                     </span>
                     <span class="buttonspan">
                         <input type="reset" class="button" id="" value="重置">
@@ -111,7 +105,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </body>
 
