@@ -54,38 +54,57 @@ def logout(request):
     resp.delete_cookie('userpsw')
     return resp
 
+#查询页面响应get
 def logcheckpage(request):
-    userid=request.COOKIES.get('userid')
-    user=Userinfo.objects.get(id=userid)
-    return render(request,'worklog_web/logcheckpage.html',locals())
+    if request.method=="GET":
+        userid=request.COOKIES.get('userid')
+        user=Userinfo.objects.get(id=userid)
+        return render(request,'worklog_web/logcheckpage.html',locals())
 
 #查询日志
 def logcheck(request):
     if request.method=="POST":
         userid=request.COOKIES.get('userid')
+        user=Userinfo.objects.get(id=userid)
 
         place=request.POST.get('place')
         needs=request.POST.get('needs')
         qsort=request.POST.get('qsort')
 
         if request.POST.get('sdate')=='':
-            sdate=datetime.datetime.now().year
+            sdate=datetime.datetime.now()
         else:
             sdate=request.POST.get('sdate')
 
         if request.POST.get('fdate')=='':
-            fdate=datetime.datetime.now().year
+            fdate=datetime.datetime.now()
         else:
             fdate=request.POST.get('fdate')
 
-        if place!=None and needs!=None and qsort!=None:
-            userworklogs=Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate)).order_by('date')
-        elif place==None and needs!=None and qsort!=None:
-            userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(needs=needs) & Q(qsort=qsort)).order_by('date')
-        elif place!=None and needs==None and qsort!=None:
+        #不定查询条件过滤器
+        if place!="":
+            if needs!="":
+                if qsort!="":
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(place=place) & Q(needs=needs) & Q(qsort=qsort)).order_by('date')
+                else:
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(place=place) & Q(needs=needs)).order_by('date')
+            else:
+                if qsort!="":
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(place=place) & Q(qsort=qsort)).order_by('date')
+                else:
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(place=place)).order_by('date')
+        else:
+            if needs!="":
+                if qsort!="":
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(needs=needs) & Q(qsort=qsort)).order_by('date')
+                else:
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(needs=needs)).order_by('date')
+            else:
+                if qsort!="":
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(qsort=qsort)).order_by('date')
+                else:
+                    userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate)).order_by('date')
 
-
-        print(userworklogs)
         return render(request,'worklog_web/logcheckpage.html',locals())
 
 
