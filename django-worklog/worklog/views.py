@@ -23,6 +23,9 @@ def login(request):
             print('--工号错误 %s'%(e))
             return HttpResponse('工号或密码错误')
 
+        if not db_userinfo.is_active:
+            return HttpResponse('账号被禁用，联系管理员解禁')
+
         #比对工号和密码正确则登录到mainpage
         if userid==db_userinfo.id and userpsw==db_userinfo.password:
             user=Userinfo.objects.get(id=userid)
@@ -48,7 +51,7 @@ def login(request):
 
         return render(request, 'login2.html')
 
-#注册
+#注册页面包含注册功能
 def signpage(request):
     if request.method=="POST":
         userid = request.POST.get('id')

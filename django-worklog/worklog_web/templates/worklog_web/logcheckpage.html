@@ -25,7 +25,7 @@
                             <a href="#">工作日志</a>
                         </li>
                         <li>
-                            <a href="#">机房巡检</a>
+                            <a href="/worklog_web/svlogctpage">机房巡检</a>
                         </li>
                         <li>
                             <a href="#">XX</a>
@@ -34,7 +34,7 @@
                             <a href="/worklog_web/logout">注销</a>
                         </li>
                         <li>
-                            {{ user.name }}
+                            <a href="/worklog_web/superuser">{{ user.name }}</a>
                             <!--调用locals()传递进来的字典参数-->
                         </li>
                     </ul>
@@ -82,24 +82,26 @@
                 <thead>
                     <tr>
                         <th>日期</th>
-                        <th>系统需求</th>
-                        <th>科室</th>
-                        <th>问题归类</th>
-                        <th>问题描述</th>
-                        <th>处理结果</th>
-                        <th>备注</th>
+                        <th>UPS电源</th>
+                        <th>服务器运行</th>
+                        <th>机房空调</th>
+                        <th>机房温度</th>
+                        <th>机房湿度</th>
+                        <th>交接事项</th>
+                        <th>交接人</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for userwl in userworklogs %}
+                    {% for svlog in svlogs %}
                     <tr>
-                        <td>{{ userwl.date|date:"Y-m-d" }}</td>
-                        <td>{{ userwl.needs }}</td>
-                        <td>{{ userwl.place }}</td>
-                        <td>{{ userwl.qsort }}</td>
-                        <td>{{ userwl.qdescribe }}</td>
-                        <td>{{ userwl.fisstatu }}</td>
-                        <td>{{ userwl.note }}</td>
+                        <td>{{ svlog.date|date:"Y-m-d" }}</td>
+                        <td>{{ svlog.ups }}</td>
+                        <td>{{ svlog.servers }}</td>
+                        <td>{{ svlog.air_conditioner }}</td>
+                        <td>{{ svlog.temperature }}</td>
+                        <td>{{ svlog.humidity }}</td>
+                        <td>{{ svlog.note }}</td>
+                        <td>{{ svlog.creater }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

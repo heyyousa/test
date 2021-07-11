@@ -9,5 +9,12 @@ urlpatterns = [
     path('logout/',views.logout),
     path('logcheck/',views.logcheck),
     path('logcheckpage/',views.logcheckpage),
+    #path('wl_update/',views.wl_update),
+    path('wl_delete/',views.wl_delete),
+    path('superuser/',views.superuser),
+    path('user_disable/',views.user_disable),
+    path('user_enable/',views.user_enable),
+    path('svlogctpage/',views.svlogctpage),
+    path('add_svlog/',views.add_svlog),
 
 ]
