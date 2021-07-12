@@ -6,6 +6,12 @@ import datetime
 
 # Create your views here.
 
+#调取用户信息的函数
+def uinfo(request):
+    userid=request.COOKIES.get('userid')
+    user=Userinfo.objects.get(id=userid)
+    return user
+
 #响应主页GET
 def mainpage(request):
     # 响应GET请求
@@ -55,7 +61,8 @@ def create_log(request):
             Userworklog.objects.create(id=userwlid,index=userwlindex,date=userwldate,needs=userwlneeds,place=userwlks,qsort=userwlqsort,qdescribe=userwlqdsb,fisstatu=userwlfst,note=userwlnote,ct_operator=user.name)
         except Exception as e:
             print ('--index写入重复 %s'%(e))
-            return HttpResponse('请重新添加')
+            message = '请重新添加'
+            return render(request, 'worklog_web/messagepage.html', locals())
 
         return redirect('/worklog_web/mainpage')
         #render(request,'worklog_web/mainpage.html',locals())
@@ -123,7 +130,8 @@ def logcheck(request):
                         userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__gte=sdate) & Q(date__lte=fdate) & Q(is_active=True)).order_by('date')
         except Exception as e:
             print('--日期错误 %s'%(e))
-            return HttpResponse('日期输入错误')
+            message = '日期输入错误'
+            return render(request, 'worklog_web/messagepage.html', locals())
 
         return render(request,'worklog_web/logcheckpage.html',locals())
 
@@ -136,37 +144,39 @@ def logcheck(request):
 #日志伪删除功能
 def wl_delete(request):
     wl_index=request.GET.get('wl_index')
-    operator_userid=request.COOKIES.get('userid')
-    opuser=Userinfo.objects.get(id=operator_userid)
+    opuser=uinfo(request)
 
     if not wl_index:
-        return HttpResponse('请求索引有误')
+        message = '请求索引异常'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     try:
         wl=Userworklog.objects.get(index=wl_index)
     except Exception as e:
         print('--index有问题 %s'%(e))
-        return HttpResponse('index错误')
+        message = '请重新添加'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     if wl.is_active:
         wl.is_active=False
         wl.ud_operator=opuser.name
         wl.save()
     else:
-        return HttpResponse('该日志已被删除')
+        message = '该日志已被删除'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     return HttpResponseRedirect('/worklog_web/logcheckpage')
 
 
 #超级用户页面
 def superuser(request):
-    userid=request.COOKIES.get('userid')
-    spuser=Userinfo.objects.get(id=userid)
+    spuser=uinfo(request)
     if spuser.is_spuser:
         users=Userinfo.objects.all()
         return render(request,'worklog_web/superuser.html',locals())
     else:
-        return HttpResponse('您不是超级用户不能访问该页面')
+        message = '非超级用户不能访问该页面'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
 
 #账户禁用功能
@@ -176,13 +186,15 @@ def user_disable(request):
     opuser=Userinfo.objects.get(id=operator_userid)
 
     if not userid:
-        return HttpResponse('请求ID异常')
+        message = '请求ID异常'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     try:
         user=Userinfo.objects.get(id=userid)
     except Exception as e:
         print('--工号有误 %s'%(e))
-        return HttpResponse('id有误')
+        message = '工号异常'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     if not user.is_spuser:
         if user.is_active:
@@ -190,9 +202,11 @@ def user_disable(request):
             user.ud_operator=opuser.name
             user.save()
         else:
-            return HttpResponse('该账户已被禁用')
+            message = '该账户已被禁用'
+            return render(request, 'worklog_web/messagepage.html', locals())
     else:
-        return HttpResponse('超级用户不能被操作')
+        message = '超级用户不能被操作'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     return HttpResponseRedirect('/worklog_web/superuser')
 
@@ -204,13 +218,15 @@ def user_enable(request):
     opuser=Userinfo.objects.get(id=operator_userid)
 
     if not userid:
-        return HttpResponse('请求ID异常')
+        message='请求ID异常'
+        return render(request,'worklog_web/messagepage.html',locals())
 
     try:
         user = Userinfo.objects.get(id=userid)
     except Exception as e:
         print('--工号有误 %s' % (e))
-        return HttpResponse('id有误')
+        message = 'ID有误'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     if not user.is_spuser:
         if not user.is_active:
@@ -218,9 +234,11 @@ def user_enable(request):
             user.ud_operator=opuser.name
             user.save()
         else:
-            return HttpResponse('该用户已启用')
+            message = '用户已启用'
+            return render(request, 'worklog_web/messagepage.html', locals())
     else:
-        return HttpResponse('超级用户不能被操作')
+        message = '超级用户不能被操作'
+        return render(request, 'worklog_web/messagepage.html', locals())
 
     return HttpResponseRedirect('/worklog_web/superuser')
 
@@ -229,7 +247,7 @@ def user_enable(request):
 def svlogctpage(request):
     userid=request.COOKIES.get('userid')
     user=Userinfo.objects.get(id=userid)
-    svlogs=Serverroomlog.objects.all()
+    svlogs=Serverroomlog.objects.filter(Q(is_active=True))
     return render(request,'worklog_web/svlogctpage.html',locals())
 
 
@@ -242,10 +260,24 @@ def add_svlog(request):
         svlogdate=request.POST.get('date')
         svlogups=request.POST.get('ups')
         svlogservers=request.POST.get('servers')
+        svlogsystime=request.POST.get('systime')
         svlogac=request.POST.get('air_conditioner')
         svlogtp=request.POST.get('temperature')
         svloghd=request.POST.get('humidity')
         svlognote=request.POST.get('note')
+
+        if not svlogups:
+            svlogups='正常'
+        if not svlogservers:
+            svlogservers='正常'
+        if not svlogsystime:
+            svlogsystime='正常'
+        if not svlogac:
+            svlogac='正常'
+
+        if not svlogtp or not svloghd:
+            message='请输入温度和湿度'
+            return render(request,'worklog_web/messagepage.html',locals())
 
         a=Serverroomlog.objects.last()
         if not bool(a):
@@ -257,12 +289,20 @@ def add_svlog(request):
             svlogindex = str(slindex).zfill(8)
 
         try:
-            Serverroomlog.objects.create(id=userid,index=svlogindex,date=svlogdate,ups=svlogups,servers=svlogservers,air_conditioner=svlogac,temperature=svlogtp,humidity=svloghd,note=svlognote,creater=user.name)
+            Serverroomlog.objects.create(id=userid,index=svlogindex,date=svlogdate,ups=svlogups,servers=svlogservers,systime=svlogsystime,air_conditioner=svlogac,temperature=svlogtp,humidity=svloghd,note=svlognote,creater=user.name)
         except Exception as e:
             print('--index重复插入 %s'%(e))
-            return HttpResponse('请重新添加')
+            message='请重新添加'
+            return render(request,'worklog_web/messagepage.html',locals())
 
         return HttpResponseRedirect('/worklog_web/svlogctpage')
+
+
+#全部日志页面
+def alllogpage(request):
+    user=uinfo(request)
+    return render(request,'worklog_web/alllogpage.html',locals())
+
 
 
 def test(request):

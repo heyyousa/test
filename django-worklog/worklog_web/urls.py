@@ -4,17 +4,18 @@ from worklog_web import views
 
 
 urlpatterns = [
-    path('mainpage/', views.mainpage),
-    path('create_log/',views.create_log),
-    path('logout/',views.logout),
-    path('logcheck/',views.logcheck),
-    path('logcheckpage/',views.logcheckpage),
+    path('mainpage/', views.mainpage),  # 主页
+    path('create_log/',views.create_log),  # 添加日志功能
+    path('logout/',views.logout),  # 注销功能
+    path('logcheck/',views.logcheck),  # 日志查询功能
+    path('logcheckpage/',views.logcheckpage),  # 日志查询页面
     #path('wl_update/',views.wl_update),
-    path('wl_delete/',views.wl_delete),
-    path('superuser/',views.superuser),
-    path('user_disable/',views.user_disable),
-    path('user_enable/',views.user_enable),
-    path('svlogctpage/',views.svlogctpage),
-    path('add_svlog/',views.add_svlog),
+    path('wl_delete/',views.wl_delete),  # 日志删除功能
+    path('superuser/',views.superuser),  # 超级用户页面
+    path('user_disable/',views.user_disable),  # 用户禁用功能
+    path('user_enable/',views.user_enable),  # 用户启用功能
+    path('svlogctpage/',views.svlogctpage),  # 机房巡检页面
+    path('add_svlog/',views.add_svlog),  # 机房巡检添加功能
+    path('alllogpage',views.alllogpage),  # 全部日志页面
 
 ]

@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'worklog_web/css/superuser.css' %}" />
+    <link rel="stylesheet" href="{% static 'worklog_web/css/alllogpage.css' %}" />
     <link rel="shortcut icon" href="{% static 'worklog_web/img/favicon.ico' %}" />
-    <title>超级用户</title>
+    <title>全部日志</title>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
                 <center>
                     <ul>
                         <li>
-                            <a href="/worklog_web/alllogpage">全部日志</a>
+                            <a href="#">全部日志</a>
                         </li>
                         <li>
                             <a href="/worklog_web/svlogctpage">机房巡检</a>
@@ -34,7 +34,7 @@
                             <a href="/worklog_web/logout">注销</a>
                         </li>
                         <li>
-                            <a href="/worklog_web/superuser">{{ spuser.name }}</a>
+                            <a href="/worklog_web/superuser">{{ user.name }}</a>
                             <!--调用locals()传递进来的字典参数-->
                         </li>
                     </ul>
@@ -44,34 +44,35 @@
     </div>
     <div style="width: 1900px;">
         <div class="logbox">
-            <form class="logtext" style="width: 450px" action="/worklog_web/usercheck" method="POST">
+            <form class="logtext" style="width: 450px" action="/worklog_web/logcheck/" method="POST">
                 <div class="loginput">
                     <label for="id">工号</label>
                     <input type="text" name="id" id="id">
                 </div>
                 <div class="loginput">
-                    <label for="name">姓名</label>
-                    <input type="text" name="name" id="name">
+                    <label for="sdate">起始日期</label>
+                    <input type="text" name="sdate" id="sdate" placeholder="例：2100-1-1">
                 </div>
                 <div class="loginput">
-                    <label for="keshi">科室</label>
-                    <input type="text" name="keshi" id="keshi">
+                    <label for="fdate">截至日期</label>
+                    <input type="text" name="fdate" id="year">
+
                 </div>
                 <div class="loginput">
-                    <label for="duty">职务</label>
-                    <input type="text" name="duty" id="duty">
+                    <label for="place">问题科室</label>
+                    <input type="text" name="place" id="place">
                 </div>
                 <div class="loginput">
-                    <label for="is_active">活跃状态</label>
-                    <input type="text" name="is_active" id="is_active">
+                    <label for="needs">系统需求</label>
+                    <input type="text" name="needs" id="needs" placeholder="是或否，不填默认否">
                 </div>
                 <div class="loginput">
-                    <label for="spuser">超级用户</label>
-                    <input type="text" name="spuser" id="spuser">
+                    <label for="qsort">问题类型</label>
+                    <input type="text" name="qsort" id="qsort">
                 </div>
                 <div class="loginput">
                     <span class="buttonspan">
-                        <input type="submit" class="button" id="" value="查询">
+                        <input type="submit" class="button" id="" value="查找">
                     </span>
                     <span class="buttonspan">
                         <input type="reset" class="button" id="" value="重置">
@@ -83,36 +84,31 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>工号</th>
-                        <th>姓名</th>
-                        <th>性别</th>
-                        <th>密码</th>
+                        <th>用户</th>
+                        <th>日期</th>
+                        <th>系统需求</th>
                         <th>科室</th>
-                        <th>职务</th>
-                        <th>活跃状态</th>
-                        <th>超级用户</th>
-                        <th>更新时间</th>
-                        <th>操作人</th>
+                        <th>问题归类</th>
+                        <th>问题描述</th>
+                        <th>处理结果</th>
+                        <th>备注</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in users %}
+                    {% for userwl in userworklogs %}
                     <tr>
-                        <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
-                        <td>{{ user.sex }}</td>
-                        <td>{{ user.password }}</td>
-                        <td>{{ user.keshi }}</td>
-                        <td>{{ user.duty }}</td>
-                        <td>{{ user.is_active }}</td>
-                        <td>{{ user.is_spuser }}</td>
-                        <td>{{ user.updated_time|date:"Y-m-d" }}</td>
-                        <td>{{ user.ud_operator }}</td>
+                        <td>{{ userwl.date|date:"Y-m-d" }}</td>
+                        <td>{{ userwl.needs }}</td>
+                        <td>{{ userwl.place }}</td>
+                        <td>{{ userwl.qsort }}</td>
+                        <td>{{ userwl.qdescribe }}</td>
+                        <td>{{ userwl.fisstatu }}</td>
+                        <td>{{ userwl.note }}</td>
                         <td>
-                            <a href="/worklog_web/wl_update">修改</a>
-                            <a href="/worklog_web/user_disable?userid={{ user.id }}">禁用</a>
-                            <a href="/worklog_web/user_enable?userid={{ user.id }}">启用</a>
+                            <a href="#">修改</a>
+                            <a href="/worklog_web/wl_delete?wl_index={{ userwl.index }}">删除</a>
                         </td>
                     </tr>
                     {% endfor %}

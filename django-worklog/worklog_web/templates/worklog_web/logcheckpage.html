@@ -82,26 +82,29 @@
                 <thead>
                     <tr>
                         <th>日期</th>
-                        <th>UPS电源</th>
-                        <th>服务器运行</th>
-                        <th>机房空调</th>
-                        <th>机房温度</th>
-                        <th>机房湿度</th>
-                        <th>交接事项</th>
-                        <th>交接人</th>
+                        <th>系统需求</th>
+                        <th>科室</th>
+                        <th>问题归类</th>
+                        <th>问题描述</th>
+                        <th>处理结果</th>
+                        <th>备注</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for svlog in svlogs %}
+                    {% for userwl in userworklogs %}
                     <tr>
-                        <td>{{ svlog.date|date:"Y-m-d" }}</td>
-                        <td>{{ svlog.ups }}</td>
-                        <td>{{ svlog.servers }}</td>
-                        <td>{{ svlog.air_conditioner }}</td>
-                        <td>{{ svlog.temperature }}</td>
-                        <td>{{ svlog.humidity }}</td>
-                        <td>{{ svlog.note }}</td>
-                        <td>{{ svlog.creater }}</td>
+                        <td>{{ userwl.date|date:"Y-m-d" }}</td>
+                        <td>{{ userwl.needs }}</td>
+                        <td>{{ userwl.place }}</td>
+                        <td>{{ userwl.qsort }}</td>
+                        <td>{{ userwl.qdescribe }}</td>
+                        <td>{{ userwl.fisstatu }}</td>
+                        <td>{{ userwl.note }}</td>
+                        <td>
+                            <a href="#">修改</a>
+                            <a href="/worklog_web/wl_delete?wl_index={{ userwl.index }}">删除</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

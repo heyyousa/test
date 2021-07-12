@@ -25,7 +25,7 @@
                             <a href="/worklog_web/logcheckpage">工作日志</a>
                         </li>
                         <li>
-                            <a href="#">机房巡检</a>
+                            <a href="/worklog_web/svlogctpage">机房巡检</a>
                         </li>
                         <li>
                             <a href="#">XX</a>
@@ -54,8 +54,12 @@
                     <input type="text" name="ups" id="ups">
                 </div>
                 <div class="loginput">
-                    <label for="servers">服务器</label>
+                    <label for="servers">服务器/交换机</label>
                     <input type="text" name="servers" id="servers">
+                </div>
+                <div class="loginput">
+                    <label for="systime">系统时间</label>
+                    <input type="text" name="systime" id="systime">
                 </div>
                 <div class="loginput">
                     <label for="air_conditioner">机房空调</label>
@@ -89,7 +93,8 @@
                     <tr>
                         <th>日期</th>
                         <th>UPS电源</th>
-                        <th>服务器运行</th>
+                        <th>服务器/交换机</th>
+                        <th>系统时间</th>
                         <th>机房空调</th>
                         <th>机房温度</th>
                         <th>机房湿度</th>
@@ -103,8 +108,10 @@
                         <td>{{ svlog.date|date:"Y-m-d" }}</td>
                         <td>{{ svlog.ups }}</td>
                         <td>{{ svlog.servers }}</td>
+                        <td>{{ svlog.systime }}</td>
                         <td>{{ svlog.air_conditioner }}</td>
                         <td>{{ svlog.temperature }} &#8451</td>
+                        <!--&#8451是摄氏度符号-->
                         <td>{{ svlog.humidity }} &#37</td>
                         <td>{{ svlog.note }}</td>
                         <td>{{ svlog.creater }}</td>

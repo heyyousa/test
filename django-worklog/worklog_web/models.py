@@ -57,6 +57,7 @@ class Serverroomlog(models.Model):
     date=models.DateField('日期')
     ups=models.CharField('UPS电源',max_length=20)
     servers=models.CharField('服务器运行',max_length=20)
+    systime=models.CharField('系统时间',max_length=20)
     air_conditioner = models.CharField('机房空调', max_length=20)
     temperature=models.CharField('温度',max_length=6)
     humidity=models.CharField('湿度',max_length=6)
@@ -72,4 +73,4 @@ class Serverroomlog(models.Model):
         verbose_name_plural='机房巡检'
 
     def __str__(self):
-        return '%s | %s | %s | %s| %s | %s | %s | %s | %s | %s | %s | %s '%(self.id,self.date,self.ups,self.servers,self.air_conditioner,self.temperature,self.humidity,self.creater,self.created_time,self.updated_time,self.is_active,self.ud_operator)
+        return '%s | %s | %s | %s| %s | %s | %s | %s | %s | %s | %s | %s | %s '%(self.id,self.date,self.ups,self.servers,self.systime,self.air_conditioner,self.temperature,self.humidity,self.creater,self.created_time,self.updated_time,self.is_active,self.ud_operator)
