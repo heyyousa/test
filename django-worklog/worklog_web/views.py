@@ -12,6 +12,7 @@ def uinfo(request):
     user=Userinfo.objects.get(id=userid)
     return user
 
+
 #响应主页GET
 def mainpage(request):
     # 响应GET请求
@@ -135,6 +136,7 @@ def logcheck(request):
 
         return render(request,'worklog_web/logcheckpage.html',locals())
 
+
 #修改日志，用ajax
 # def wl_update(request):
 #     if request.method=="GET":
@@ -178,6 +180,32 @@ def superuser(request):
         message = '非超级用户不能访问该页面'
         return render(request, 'worklog_web/messagepage.html', locals())
 
+#查询用户功能
+def usercheck(request):
+    if request.method=="POST":
+        spuser=uinfo(request)
+
+        userid=request.POST.get('id')
+        username=request.POST.get('name')
+        userkeshi=request.POST.get('keshi')
+        userduty=request.POST.get('duty')
+        useractive=request.POST.get('is_active')
+
+        q=Q()
+        if userid!='':
+            q &= Q(id=userid)
+        if username!='':
+            q &=Q(name=username)
+        if userkeshi!='':
+            q &= Q(keshi=userkeshi)
+        if userduty!='':
+            q &= Q(duty=userduty)
+        if useractive!='':
+            q &= Q(is_active=useractive)
+
+        users=Userinfo.objects.filter(q)
+
+        return render(request,'worklog_web/superuser.html',locals())
 
 #账户禁用功能
 def user_disable(request):
@@ -275,8 +303,8 @@ def add_svlog(request):
         if not svlogac:
             svlogac='正常'
 
-        if not svlogtp or not svloghd:
-            message='请输入温度和湿度'
+        if not svlogtp or not svloghd or not svlogdate:
+            message='请输入日期、温度、湿度'
             return render(request,'worklog_web/messagepage.html',locals())
 
         a=Serverroomlog.objects.last()
@@ -300,13 +328,67 @@ def add_svlog(request):
 
 #全部日志页面
 def alllogpage(request):
-    user=uinfo(request)
+    spuser=uinfo(request)
     return render(request,'worklog_web/alllogpage.html',locals())
+
+
+#全部日志查询功能
+def alllog_check(request):
+    if request.method=="POST":
+        spuser=uinfo(request)
+
+        uid=request.POST.get('id')
+        if uid!='':
+            user=Userinfo.objects.get(id=uid)
+
+        sdate=request.POST.get('sdate')
+        fdate=request.POST.get('fdate')
+        place=request.POST.get('place')
+        needs=request.POST.get('needs')
+        qsort=request.POST.get('qsort')
+
+        if sdate=='':
+            sdate=datetime.datetime.now()
+        if fdate=='':
+            fdate=datetime.datetime.now()
+
+        q=Q()
+        q &= Q(is_active=True)
+
+        if place != '':
+            q &= Q(place=place)
+        if needs != '':
+            q &= Q(needs=needs)
+        if qsort != '':
+            q &= Q(qsort=qsort)
+        if sdate != '':
+            q &= Q(date__gte=sdate)
+        if fdate != '':
+            q &= Q(date__lte=fdate)
+        if uid!='':
+            q &= Q(id=uid)
+
+        alllogs=Userworklog.objects.filter(q).order_by('date')
+
+        print(q,alllogs,spuser)
+        return render(request,'worklog_web/alllogpage.html',locals())
+
 
 
 
 def test(request):
-    userid='001'
-    userworklogs = Userworklog.objects.filter(id=userid)
-    user = Userinfo.objects.filter(id=userid)
-    return HttpResponse(locals())
+    user=uinfo(request)
+    q=Q()
+    uname=''
+    uid='002'
+    usex='男'
+    if uname!='':
+        q &= Q(name=uname)
+    if uid!='':
+        q &= Q(id=uid)
+    if usex!='':
+        q &= Q(sex=usex)
+    print(q)
+    users=Userinfo.objects.filter(q)
+    print(users)
+    return render(request,'worklog_web/test.html',locals())

@@ -44,7 +44,7 @@
     </div>
     <div style="width: 1900px;">
         <div class="logbox">
-            <form class="logtext" style="width: 450px" action="/worklog_web/usercheck" method="POST">
+            <form class="logtext" style="width: 450px" action="/worklog_web/usercheck/" method="POST">
                 <div class="loginput">
                     <label for="id">工号</label>
                     <input type="text" name="id" id="id">
@@ -64,10 +64,6 @@
                 <div class="loginput">
                     <label for="is_active">活跃状态</label>
                     <input type="text" name="is_active" id="is_active">
-                </div>
-                <div class="loginput">
-                    <label for="spuser">超级用户</label>
-                    <input type="text" name="spuser" id="spuser">
                 </div>
                 <div class="loginput">
                     <span class="buttonspan">
@@ -90,7 +86,6 @@
                         <th>科室</th>
                         <th>职务</th>
                         <th>活跃状态</th>
-                        <th>超级用户</th>
                         <th>更新时间</th>
                         <th>操作人</th>
                         <th>操作</th>
@@ -106,7 +101,6 @@
                         <td>{{ user.keshi }}</td>
                         <td>{{ user.duty }}</td>
                         <td>{{ user.is_active }}</td>
-                        <td>{{ user.is_spuser }}</td>
                         <td>{{ user.updated_time|date:"Y-m-d" }}</td>
                         <td>{{ user.ud_operator }}</td>
                         <td>

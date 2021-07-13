@@ -22,7 +22,7 @@
                 <center>
                     <ul>
                         <li>
-                            <a href="#">全部日志</a>
+                            <a href="/worklog_web/alllogpage">全部日志</a>
                         </li>
                         <li>
                             <a href="/worklog_web/svlogctpage">机房巡检</a>
@@ -34,7 +34,7 @@
                             <a href="/worklog_web/logout">注销</a>
                         </li>
                         <li>
-                            <a href="/worklog_web/superuser">{{ user.name }}</a>
+                            <a href="/worklog_web/superuser">{{ spuser.name }}</a>
                             <!--调用locals()传递进来的字典参数-->
                         </li>
                     </ul>
@@ -44,7 +44,7 @@
     </div>
     <div style="width: 1900px;">
         <div class="logbox">
-            <form class="logtext" style="width: 450px" action="/worklog_web/logcheck/" method="POST">
+            <form class="logtext" style="width: 450px" action="/worklog_web/alllog_check/" method="POST">
                 <div class="loginput">
                     <label for="id">工号</label>
                     <input type="text" name="id" id="id">
@@ -96,19 +96,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for userwl in userworklogs %}
+                    {% for alllog in alllogs %}
                     <tr>
-                        <td>{{ user.name }}</td>
-                        <td>{{ userwl.date|date:"Y-m-d" }}</td>
-                        <td>{{ userwl.needs }}</td>
-                        <td>{{ userwl.place }}</td>
-                        <td>{{ userwl.qsort }}</td>
-                        <td>{{ userwl.qdescribe }}</td>
-                        <td>{{ userwl.fisstatu }}</td>
-                        <td>{{ userwl.note }}</td>
+                        <td>{{ alllog.ct_operator }}</td>
+                        <td>{{ alllog.date|date:"Y-m-d" }}</td>
+                        <td>{{ alllog.needs }}</td>
+                        <td>{{ alllog.place }}</td>
+                        <td>{{ alllog.qsort }}</td>
+                        <td>{{ alllog.qdescribe }}</td>
+                        <td>{{ alllog.fisstatu }}</td>
+                        <td>{{ alllog.note }}</td>
                         <td>
                             <a href="#">修改</a>
-                            <a href="/worklog_web/wl_delete?wl_index={{ userwl.index }}">删除</a>
+                            <a href="/worklog_web/wl_delete?wl_index={{ alllog.index }}">删除</a>
                         </td>
                     </tr>
                     {% endfor %}

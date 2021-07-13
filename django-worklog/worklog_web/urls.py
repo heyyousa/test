@@ -12,10 +12,13 @@ urlpatterns = [
     #path('wl_update/',views.wl_update),
     path('wl_delete/',views.wl_delete),  # 日志删除功能
     path('superuser/',views.superuser),  # 超级用户页面
+    path('usercheck/',views.usercheck),  # 用户查询功能
     path('user_disable/',views.user_disable),  # 用户禁用功能
     path('user_enable/',views.user_enable),  # 用户启用功能
     path('svlogctpage/',views.svlogctpage),  # 机房巡检页面
     path('add_svlog/',views.add_svlog),  # 机房巡检添加功能
-    path('alllogpage',views.alllogpage),  # 全部日志页面
+    path('alllogpage/',views.alllogpage),  # 全部日志页面
+    path('alllog_check/',views.alllog_check),  # 全部日志查询功能
+    path('test/',views.test),  # 测试函数
 
 ]
