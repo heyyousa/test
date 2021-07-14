@@ -19,6 +19,10 @@ urlpatterns = [
     path('add_svlog/',views.add_svlog),  # 机房巡检添加功能
     path('alllogpage/',views.alllogpage),  # 全部日志页面
     path('alllog_check/',views.alllog_check),  # 全部日志查询功能
+    path('wlexcel/',views.wlexcel),  # 数据表导出excel
+    path('zhiban/',views.zhiban),  # 值班表
+
+
     path('test/',views.test),  # 测试函数
 
 ]

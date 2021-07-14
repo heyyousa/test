@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'worklog_web/css/mainpage.css' %}" />
     <link rel="shortcut icon" href="{% static 'worklog_web/img/favicon.ico' %}" />
-    <title>沧县医院WORKLOG</title>
+    <title>值班表</title>
 </head>
 
 <body>
@@ -28,7 +28,7 @@
                             <a href="/worklog_web/svlogctpage">机房巡检</a>
                         </li>
                         <li>
-                            <a href="/worklog_web/zhiban">值班表</a>
+                            <a href="#">值班表</a>
                         </li>
                         <li>
                             <a href="/worklog_web/logout">注销</a>
@@ -87,34 +87,8 @@
             <a href="/worklog_web/wlexcel">导出excel</a>
         </div>
         <div class="chartbox">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>日期</th>
-                        <th>系统需求</th>
-                        <th>科室</th>
-                        <th>问题归类</th>
-                        <th>问题描述</th>
-                        <th>处理结果</th>
-                        <th>备注</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for userwl in userworklogs %}
-                    <tr>
-                        <td>{{ userwl.date|date:"Y-m-d" }}</td>
-                        <td>{{ userwl.needs }}</td>
-                        <td>{{ userwl.place }}</td>
-                        <td>{{ userwl.qsort }}</td>
-                        <td>{{ userwl.qdescribe }}</td>
-                        <td>{{ userwl.fisstatu }}</td>
-                        <td>{{ userwl.note }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
 
+        </div>
     </div>
 </body>
 

@@ -2,7 +2,11 @@ from django.shortcuts import render,redirect
 from worklog_web.models import *
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Q
+from django.utils.http import urlquote
 import datetime
+import pandas as pd
+import xlwt
+import xlrd
 
 # Create your views here.
 
@@ -49,6 +53,9 @@ def create_log(request):
             userwlindex = str(lindex).zfill(8)
 
         userwldate=request.POST.get('date')
+        if userwldate=='':
+            userwldate=datetime.date.today()
+
         userwlneeds=request.POST.get('needs')
         if userwlneeds=='':
             userwlneeds='否'
@@ -133,6 +140,7 @@ def logcheck(request):
             print('--日期错误 %s'%(e))
             message = '日期输入错误'
             return render(request, 'worklog_web/messagepage.html', locals())
+
 
         return render(request,'worklog_web/logcheckpage.html',locals())
 
@@ -373,6 +381,47 @@ def alllog_check(request):
         print(q,alllogs,spuser)
         return render(request,'worklog_web/alllogpage.html',locals())
 
+
+#当月日志导出excel功能
+def wlexcel(request):
+    userid=request.COOKIES.get('userid')
+
+    resp=HttpResponse(content_type='application/ms-excel')
+    filename='工作日志.xls'
+    filename=urlquote(filename)
+    resp['Content-Disposition']='attachment; filename=%s'%(filename)
+
+    wb=xlwt.Workbook(encoding='utf-8')
+    ws=wb.add_sheet('sheet1')
+    font_style=xlwt.XFStyle()
+    font_style.font.bold=True
+
+    # 不同数据表列名不同
+    cols=['日期','系统需求','问题科室','问题类型','问题简述','处理结果','备注']
+    frow=0
+
+    logs=Userworklog.objects.filter(Q(id=userid) & Q(date__month=datetime.datetime.now().month) & Q(is_active=True)).values_list('date','needs','place','qsort','qdescribe','fisstatu','note')
+
+    for col in range(len(cols)):
+        ws.write(frow,col,cols[col],font_style)
+
+    font_style = xlwt.XFStyle()
+
+    for row in range(len(logs)):
+        row+=1
+        print(len(logs))
+        for col in range(len(cols)):
+            ws.write(row,col,logs[row-1][col],font_style)
+
+    wb.save(resp)
+    return resp
+
+
+#值班表
+def zhiban(request):
+    zb=pd.read_excel('worklog_web/zhiban/zhiban.xls')
+    zb_html=zb.to_html()
+    return render(request,'worklog_web/zhibanpage.html',locals())
 
 
 

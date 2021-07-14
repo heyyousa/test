@@ -30,7 +30,7 @@ def login(request):
         if userid==db_userinfo.id and userpsw==db_userinfo.password:
             user=Userinfo.objects.get(id=userid)
             resp=redirect('/worklog_web/mainpage')
-            resp.set_cookie('userid',userid,60*60*24)
+            resp.set_cookie('userid',userid,60*60*2)
             resp.set_cookie('userpsw',user.password,2)
             return resp
         else:
