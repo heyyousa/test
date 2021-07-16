@@ -28,9 +28,7 @@ SECRET_KEY = 'django-insecure-82b!)$7*5k_^%@_y!ftpgc2w1w1v2twuim0(+zz#a-b-_xr!cw
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -122,7 +120,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False  # 是否使用美国时间，True时会覆盖掉TIME_ZONE。
+USE_TZ = False  # 是否使用美国时间，True时会覆盖掉TIME_ZONE，mysql会储存USA_TZ，但调用时还是TIME_ZONE
 
 
 # Static files (CSS, JavaScript, Images)

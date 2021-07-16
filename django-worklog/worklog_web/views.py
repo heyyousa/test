@@ -10,7 +10,18 @@ import xlrd
 
 # Create your views here.
 
-#调取用户信息的函数
+#检查登录状态装饰器
+def checklogin(fn):
+    def wrap(request,*args,**kwargs):
+        userid=request.COOKIES.get('userid')
+        if not userid:
+            return HttpResponseRedirect('/login')
+
+        return fn(request,*args,**kwargs)
+    return wrap
+
+
+#调取用户信息的函数,返回user实例
 def uinfo(request):
     userid=request.COOKIES.get('userid')
     user=Userinfo.objects.get(id=userid)
@@ -18,6 +29,7 @@ def uinfo(request):
 
 
 #响应主页GET
+@checklogin
 def mainpage(request):
     # 响应GET请求
     if request.method=="GET":
@@ -29,20 +41,21 @@ def mainpage(request):
             userworklogs = Userworklog.objects.filter(Q(id=userid) & Q(date__month=datetime.datetime.now().month) & Q(is_active=True)).order_by('date')
             # 获取该ID的用户信息
             user = Userinfo.objects.get(id=userid)
+
             return render(request, 'worklog_web/mainpage.html', locals())
 
         else:
-            resp=redirect('/login/')
+            resp=redirect('/login')
             return resp
 
 
 #新建日志，响应主页POST
+@checklogin
 def create_log(request):
     if request.method=="POST":
-        userid = request.COOKIES.get('userid')
-        userwlid=userid
+        user=uinfo(request)
+        userwlid=user.id
         a=Userworklog.objects.last()
-        user=Userinfo.objects.get(id=userid)
 
         if not bool(a):
             lindex = "00000001"
@@ -85,18 +98,19 @@ def logout(request):
 
 
 #查询页面响应get
+@checklogin
 def logcheckpage(request):
     if request.method=="GET":
-        userid=request.COOKIES.get('userid')
-        user=Userinfo.objects.get(id=userid)
+        user=uinfo(request)
         return render(request,'worklog_web/logcheckpage.html',locals())
 
 
 #查询日志功能
+@checklogin
 def logcheck(request):
     if request.method=="POST":
-        userid=request.COOKIES.get('userid')
-        user=Userinfo.objects.get(id=userid)
+        user=uinfo(request)
+        userid=user.id
 
         place=request.POST.get('place')
         needs=request.POST.get('needs')
@@ -152,6 +166,7 @@ def logcheck(request):
 
 
 #日志伪删除功能
+@checklogin
 def wl_delete(request):
     wl_index=request.GET.get('wl_index')
     opuser=uinfo(request)
@@ -179,6 +194,7 @@ def wl_delete(request):
 
 
 #超级用户页面
+@checklogin
 def superuser(request):
     spuser=uinfo(request)
     if spuser.is_spuser:
@@ -188,7 +204,9 @@ def superuser(request):
         message = '非超级用户不能访问该页面'
         return render(request, 'worklog_web/messagepage.html', locals())
 
+
 #查询用户功能
+@checklogin
 def usercheck(request):
     if request.method=="POST":
         spuser=uinfo(request)
@@ -215,10 +233,13 @@ def usercheck(request):
 
         return render(request,'worklog_web/superuser.html',locals())
 
+
 #账户禁用功能
+@checklogin
 def user_disable(request):
     userid=request.GET.get('userid')
-    operator_userid=request.COOKIES.get('userid')
+    operator_user=uinfo(request)
+    operator_userid=operator_user.id
     opuser=Userinfo.objects.get(id=operator_userid)
 
     if not userid:
@@ -248,9 +269,11 @@ def user_disable(request):
 
 
 #账户启用功能
+@checklogin
 def user_enable(request):
     userid = request.GET.get('userid')
-    operator_userid=request.COOKIES.get('userid')
+    operator_user=uinfo(request)
+    operator_userid=operator_user.id
     opuser=Userinfo.objects.get(id=operator_userid)
 
     if not userid:
@@ -279,19 +302,19 @@ def user_enable(request):
     return HttpResponseRedirect('/worklog_web/superuser')
 
 
-#机房巡检添加页面
+#机房巡检页面
+@checklogin
 def svlogctpage(request):
-    userid=request.COOKIES.get('userid')
-    user=Userinfo.objects.get(id=userid)
+    user=uinfo(request)
     svlogs=Serverroomlog.objects.filter(Q(is_active=True))
     return render(request,'worklog_web/svlogctpage.html',locals())
 
 
 #机房巡检添加功能
+@checklogin
 def add_svlog(request):
     if request.method=="POST":
-        userid=request.COOKIES.get('userid')
-        user=Userinfo.objects.get(id=userid)
+        user=uinfo(request)
 
         svlogdate=request.POST.get('date')
         svlogups=request.POST.get('ups')
@@ -325,7 +348,7 @@ def add_svlog(request):
             svlogindex = str(slindex).zfill(8)
 
         try:
-            Serverroomlog.objects.create(id=userid,index=svlogindex,date=svlogdate,ups=svlogups,servers=svlogservers,systime=svlogsystime,air_conditioner=svlogac,temperature=svlogtp,humidity=svloghd,note=svlognote,creater=user.name)
+            Serverroomlog.objects.create(id=user.id,index=svlogindex,date=svlogdate,ups=svlogups,servers=svlogservers,systime=svlogsystime,air_conditioner=svlogac,temperature=svlogtp,humidity=svloghd,note=svlognote,creater=user.name)
         except Exception as e:
             print('--index重复插入 %s'%(e))
             message='请重新添加'
@@ -335,12 +358,14 @@ def add_svlog(request):
 
 
 #全部日志页面
+@checklogin
 def alllogpage(request):
     spuser=uinfo(request)
     return render(request,'worklog_web/alllogpage.html',locals())
 
 
 #全部日志查询功能
+@checklogin
 def alllog_check(request):
     if request.method=="POST":
         spuser=uinfo(request)
@@ -383,8 +408,9 @@ def alllog_check(request):
 
 
 #当月日志导出excel功能
+@checklogin
 def wlexcel(request):
-    userid=request.COOKIES.get('userid')
+    user=uinfo(request)
 
     resp=HttpResponse(content_type='application/ms-excel')
     filename='工作日志.xls'
@@ -400,7 +426,7 @@ def wlexcel(request):
     cols=['日期','系统需求','问题科室','问题类型','问题简述','处理结果','备注']
     frow=0
 
-    logs=Userworklog.objects.filter(Q(id=userid) & Q(date__month=datetime.datetime.now().month) & Q(is_active=True)).values_list('date','needs','place','qsort','qdescribe','fisstatu','note')
+    logs=Userworklog.objects.filter(Q(id=user.id) & Q(date__month=datetime.datetime.now().month) & Q(is_active=True)).values_list('date','needs','place','qsort','qdescribe','fisstatu','note')
 
     for col in range(len(cols)):
         ws.write(frow,col,cols[col],font_style)
@@ -418,6 +444,7 @@ def wlexcel(request):
 
 
 #值班表
+@checklogin
 def zhiban(request):
     zb=pd.read_excel('worklog_web/zhiban/zhiban.xls')
     zb_html=zb.to_html()
