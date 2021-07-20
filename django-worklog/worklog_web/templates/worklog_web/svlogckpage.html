@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'worklog_web/css/svlogctpage.css' %}" />
+    <link rel="stylesheet" href="{% static 'worklog_web/css/svlogckpage.css' %}" />
     <link rel="shortcut icon" href="{% static 'worklog_web/img/favicon.ico' %}" />
     <title>沧县医院WORKLOG</title>
 </head>
@@ -47,10 +47,14 @@
     </div>
     <div style="width: 1900px;">
         <div class="logbox">
-            <form class="logtext" style="width: 450px" action="/worklog_web/add_svlog/" method="POST">
+            <form class="logtext" style="width: 450px" action="/worklog_web/svlogcheck/" method="POST">
                 <div class="loginput">
-                    <label for="date">日期</label>
-                    <input type="text" name="date" id="date" placeholder="例：2100-1-1">
+                    <label for="sdate">起始日期</label>
+                    <input type="text" name="sdate" id="sdate" placeholder="例：2100-1-1">
+                </div>
+                <div class="loginput">
+                    <label for="fdate">截至日期</label>
+                    <input type="text" name="fdate" id="fdate">
                 </div>
                 <div class="loginput">
                     <label for="ups">UPS电源</label>
@@ -69,26 +73,20 @@
                     <input type="text" name="air_conditioner" id="air_conditioner" placeholder="正常">
                 </div>
                 <div class="loginput">
-                    <label for="temperature">机房温度</label>
-                    <input type="text" name="temperature" id="temperature">
-                </div>
-                <div class="loginput">
-                    <label for="humidity">机房湿度</label>
-                    <input type="text" name="humidity" id="humidity">
-                </div>
-                <div class="notediv">
-                    <label for="note">交接事项</label>
-                    <textarea name="note" id="note" cols="40" rows="3" placeholder="选填不超过50字"></textarea>
-                </div>
-                <div class="loginput">
                     <span class="buttonspan">
-                        <input type="submit" class="button" id="" value="添加">
+                        <input type="submit" class="button" id="" value="查询">
                     </span>
                     <span class="buttonspan">
                         <input type="reset" class="button" id="" value="重置">
                     </span>
                 </div>
             </form>
+        </div>
+        <div class="aaa">
+            {% if sdate %}
+            <a
+                href="/worklog_web/svlogexcel?sl_sdate={{ sdate }}&sl_fdate={{ fdate }}&sl_ups={{ ups }}&sl_servers={{ servers }}&sl_systime={{ systime }}&sl_ac={{ air_conditioner }}">导出excel</a>
+            {% endif %}
         </div>
         <div class="chartbox">
             <table class="table">

@@ -100,9 +100,8 @@ def logout(request):
 #查询页面响应get
 @checklogin
 def logcheckpage(request):
-    if request.method=="GET":
-        user=uinfo(request)
-        return render(request,'worklog_web/logcheckpage.html',locals())
+    user=uinfo(request)
+    return render(request,'worklog_web/logcheckpage.html',locals())
 
 
 #查询日志功能
@@ -117,12 +116,12 @@ def logcheck(request):
         qsort=request.POST.get('qsort')
 
         if request.POST.get('sdate')=='':
-            sdate=datetime.datetime.now()
+            sdate=datetime.date.today().isoformat()
         else:
             sdate=request.POST.get('sdate')
 
         if request.POST.get('fdate')=='':
-            fdate=datetime.datetime.now()
+            fdate=datetime.date.today().isoformat()
         else:
             fdate=request.POST.get('fdate')
 
@@ -205,7 +204,7 @@ def superuser(request):
         return render(request, 'worklog_web/messagepage.html', locals())
 
 
-#查询用户功能
+#查询用户功能(Q对象拼接实现条件不定情况）
 @checklogin
 def usercheck(request):
     if request.method=="POST":
@@ -306,7 +305,7 @@ def user_enable(request):
 @checklogin
 def svlogctpage(request):
     user=uinfo(request)
-    svlogs=Serverroomlog.objects.filter(Q(is_active=True))
+    svlogs=Serverroomlog.objects.filter(Q(is_active=True) & Q(date__month=datetime.date.today().month)).order_by('date')
     return render(request,'worklog_web/svlogctpage.html',locals())
 
 
@@ -357,10 +356,66 @@ def add_svlog(request):
         return HttpResponseRedirect('/worklog_web/svlogctpage')
 
 
+#巡检日志查询页面
+@checklogin
+def svlogckpage(request):
+    user=uinfo(request)
+    return render(request,'worklog_web/svlogckpage.html',locals())
+
+
+#巡检日志查询功能
+@checklogin
+def svlogcheck(request):
+    user = uinfo(request)
+    userid = user.id
+
+    sdate=request.POST.get('sdate')
+    fdate=request.POST.get('fdate')
+    ups=request.POST.get('ups')
+    servers=request.POST.get('servers')
+    systime=request.POST.get('systime')
+    ac=request.POST.get('air_conditioner')
+
+    if request.POST.get('sdate') == '':
+        sdate = datetime.date.today().isoformat()
+
+    if request.POST.get('fdate') == '':
+        fdate = datetime.date.today().isoformat()
+
+    q = Q()
+    q&=Q(date__gte=sdate)
+    q&=Q(date__lte=fdate)
+    q&=Q(is_active=True)
+
+    if ups=='':
+        ups='正常'
+    else:
+        q&=Q(ups=ups)
+
+    if servers=='':
+        servers='正常'
+    else:
+        q&=Q(servers=servers)
+
+    if systime=='':
+        systime='正常'
+    else:
+        q&=Q(systime=systime)
+
+    if ac=='':
+        ac='正常'
+    else:
+        q&=Q(air_conditioner=ac)
+
+    svlogs=Serverroomlog.objects.filter(q).order_by('date')
+
+    return render(request, 'worklog_web/svlogckpage.html', locals())
+
 #全部日志页面
 @checklogin
 def alllogpage(request):
     spuser=uinfo(request)
+    flag=False
     return render(request,'worklog_web/alllogpage.html',locals())
 
 
@@ -369,11 +424,9 @@ def alllogpage(request):
 def alllog_check(request):
     if request.method=="POST":
         spuser=uinfo(request)
+        flag=True
 
         uid=request.POST.get('id')
-        if uid!='':
-            user=Userinfo.objects.get(id=uid)
-
         sdate=request.POST.get('sdate')
         fdate=request.POST.get('fdate')
         place=request.POST.get('place')
@@ -381,13 +434,15 @@ def alllog_check(request):
         qsort=request.POST.get('qsort')
 
         if sdate=='':
-            sdate=datetime.datetime.now()
+            sdate=datetime.date.today().isoformat()
         if fdate=='':
-            fdate=datetime.datetime.now()
+            fdate=datetime.date.today().isoformat()
 
         q=Q()
         q &= Q(is_active=True)
 
+        if uid!='':
+            q &= Q(id=uid)
         if place != '':
             q &= Q(place=place)
         if needs != '':
@@ -398,23 +453,41 @@ def alllog_check(request):
             q &= Q(date__gte=sdate)
         if fdate != '':
             q &= Q(date__lte=fdate)
-        if uid!='':
-            q &= Q(id=uid)
 
         alllogs=Userworklog.objects.filter(q).order_by('date')
 
-        print(q,alllogs,spuser)
         return render(request,'worklog_web/alllogpage.html',locals())
 
 
-#当月日志导出excel功能
+#日志查询后导出excel功能
 @checklogin
-def wlexcel(request):
+def ckwlexcel(request):
     user=uinfo(request)
 
+    sdate=request.GET.get('wl_sdate')
+    fdate=request.GET.get('wl_fdate')
+    place=request.GET.get('wl_place')
+    needs=request.GET.get('wl_needs')
+    qsort=request.GET.get('wl_qsort')
+
+    q=Q()
+    q&=Q(id=user.id)
+    q&=Q(date__gte=sdate)
+    q&=Q(date__lte=fdate)
+    q&=Q(is_active=True)
+
+    if place!='':
+        q&=Q(place=place)
+    if needs!='':
+        q&=Q(needs=needs)
+    if qsort!='':
+        q&=Q(qsort=qsort)
+
+    logs = Userworklog.objects.filter(q).values_list('date', 'needs', 'place', 'qsort', 'qdescribe', 'fisstatu', 'note').order_by('date')
+
     resp=HttpResponse(content_type='application/ms-excel')
-    filename='工作日志.xls'
-    filename=urlquote(filename)
+    filename='工作日志'+'%s'%(datetime.datetime.now())+'.xls'
+    filename=urlquote(filename) # 让中文名称可用
     resp['Content-Disposition']='attachment; filename=%s'%(filename)
 
     wb=xlwt.Workbook(encoding='utf-8')
@@ -426,7 +499,61 @@ def wlexcel(request):
     cols=['日期','系统需求','问题科室','问题类型','问题简述','处理结果','备注']
     frow=0
 
-    logs=Userworklog.objects.filter(Q(id=user.id) & Q(date__month=datetime.datetime.now().month) & Q(is_active=True)).values_list('date','needs','place','qsort','qdescribe','fisstatu','note')
+    for col in range(len(cols)):
+        ws.write(frow,col,cols[col],font_style)
+
+    font_style = xlwt.XFStyle()
+
+    for row in range(len(logs)):
+        row+=1
+        for col in range(len(cols)):
+            ws.write(row,col,logs[row-1][col],font_style)
+
+    wb.save(resp)
+    return resp
+
+
+#全部日志导出excel功能
+@checklogin
+def allwlexcel(request):
+    user=uinfo(request)
+
+    uid=request.GET.get('wl_uid')
+    sdate = request.GET.get('wl_sdate')
+    fdate = request.GET.get('wl_fdate')
+    place = request.GET.get('wl_place')
+    needs = request.GET.get('wl_needs')
+    qsort = request.GET.get('wl_qsort')
+
+    q = Q()
+    q &= Q(date__gte=sdate)
+    q &= Q(date__lte=fdate)
+    q &= Q(is_active=True)
+
+    if uid != '':
+        q&=Q(id=uid)
+    if place != '':
+        q &= Q(place=place)
+    if needs != '':
+        q &= Q(needs=needs)
+    if qsort != '':
+        q &= Q(qsort=qsort)
+
+    logs = Userworklog.objects.filter(q).values_list('ct_operator', 'date', 'needs', 'place', 'qsort', 'qdescribe','fisstatu', 'note').order_by('date')
+
+    resp=HttpResponse(content_type='application/ms-excel')
+    filename='全部日志'+'%s'%(datetime.datetime.now())+'.xls'
+    filename=urlquote(filename) # 让中文名称可用
+    resp['Content-Disposition']='attachment; filename=%s'%(filename)
+
+    wb=xlwt.Workbook(encoding='utf-8')
+    ws=wb.add_sheet('sheet1')
+    font_style=xlwt.XFStyle()
+    font_style.font.bold=True
+
+    # 不同数据表列名不同
+    cols=['用户','日期','系统需求','问题科室','问题类型','问题简述','处理结果','备注']
+    frow=0
 
     for col in range(len(cols)):
         ws.write(frow,col,cols[col],font_style)
@@ -435,9 +562,82 @@ def wlexcel(request):
 
     for row in range(len(logs)):
         row+=1
-        print(len(logs))
         for col in range(len(cols)):
             ws.write(row,col,logs[row-1][col],font_style)
+
+    wb.save(resp)
+    return resp
+
+
+#机房巡检记录导出excel功能
+@checklogin
+def svlogexcel(request):
+    user = uinfo(request)
+
+    sdate = request.GET.get('sl_sdate')
+    fdate = request.GET.get('sl_fdate')
+    ups = request.GET.get('sl_ups')
+    servers = request.GET.get('sl_servers')
+    systime = request.GET.get('sl_systime')
+    ac = request.GET.get('sl_ac')
+
+    if sdate=='':
+        sdate = datetime.date.today().isoformat()
+
+    if fdate=='':
+        fdate = datetime.date.today().isoformat()
+
+    q = Q()
+    q &= Q(date__gte=sdate)
+    q &= Q(date__lte=fdate)
+    q &= Q(is_active=True)
+
+    if ups == '':
+        pass
+    else:
+        q &= Q(ups=ups)
+
+    if servers == '':
+        pass
+    else:
+        q &= Q(servers=servers)
+
+    if systime == '':
+        pass
+    else:
+        q &= Q(systime=systime)
+
+    if ac == '':
+        pass
+    else:
+        q &= Q(air_conditioner=ac)
+
+    logs = Serverroomlog.objects.filter(q).values_list('date', 'ups', 'servers', 'systime', 'air_conditioner', 'temperature', 'humidity','note','creater').order_by('date')
+    print(logs)
+
+    resp = HttpResponse(content_type='application/ms-excel')
+    filename = '机房巡检' + '%s' % (datetime.datetime.now()) + '.xls'
+    filename = urlquote(filename)  # 让中文名称可用
+    resp['Content-Disposition'] = 'attachment; filename=%s' % (filename)
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('sheet1')
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    # 不同数据表列名不同
+    cols = ['日期', 'UPS电源', '服务器/交换机', '系统时间', '机房空调', '机房温度', '机房湿度','交接事项','交接人']
+    frow = 0
+
+    for col in range(len(cols)):
+        ws.write(frow, col, cols[col], font_style)
+
+    font_style = xlwt.XFStyle()
+
+    for row in range(len(logs)):
+        row += 1
+        for col in range(len(cols)):
+            ws.write(row, col, logs[row - 1][col], font_style)
 
     wb.save(resp)
     return resp

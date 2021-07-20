@@ -28,6 +28,9 @@
                             <a href="/worklog_web/svlogctpage">机房巡检</a>
                         </li>
                         <li>
+                            <a href="/worklog_web/svlogckpage">巡检查询</a>
+                        </li>
+                        <li>
                             <a href="#">值班表</a>
                         </li>
                         <li>
@@ -69,7 +72,7 @@
                 </div>
                 <div class="loginput">
                     <span class="buttonspan">
-                        <input type="submit" class="button" id="" value="查找">
+                        <input type="submit" class="button" id="" value="查询">
                     </span>
                     <span class="buttonspan">
                         <input type="reset" class="button" id="" value="重置">
@@ -78,7 +81,10 @@
             </form>
         </div>
         <div class="aaa">
-            <a href="#">导出excel</a>
+            {% if sdate %}
+            <a
+                href="/worklog_web/ckwlexcel?wl_sdate={{ sdate }}&wl_fdate={{ fdate }}&wl_place={{ place }}&wl_needs={{ needs }}&wl_qsort={{ qsort }}">导出excel</a>
+            {% endif %}
         </div>
         <div class="chartbox">
             <table class="table">
