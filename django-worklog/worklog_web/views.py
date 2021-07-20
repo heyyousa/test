@@ -592,28 +592,16 @@ def svlogexcel(request):
     q &= Q(date__lte=fdate)
     q &= Q(is_active=True)
 
-    if ups == '':
-        pass
-    else:
+    if ups != '正常':
         q &= Q(ups=ups)
-
-    if servers == '':
-        pass
-    else:
+    if servers != '正常':
         q &= Q(servers=servers)
-
-    if systime == '':
-        pass
-    else:
+    if systime != '正常':
         q &= Q(systime=systime)
-
-    if ac == '':
-        pass
-    else:
+    if ac != '正常':
         q &= Q(air_conditioner=ac)
 
     logs = Serverroomlog.objects.filter(q).values_list('date', 'ups', 'servers', 'systime', 'air_conditioner', 'temperature', 'humidity','note','creater').order_by('date')
-    print(logs)
 
     resp = HttpResponse(content_type='application/ms-excel')
     filename = '机房巡检' + '%s' % (datetime.datetime.now()) + '.xls'
@@ -626,7 +614,7 @@ def svlogexcel(request):
     font_style.font.bold = True
 
     # 不同数据表列名不同
-    cols = ['日期', 'UPS电源', '服务器/交换机', '系统时间', '机房空调', '机房温度', '机房湿度','交接事项','交接人']
+    cols = ['日期', 'UPS电源', '服务器/交换机', '系统时间', '机房空调', '机房温度 ℃', '机房湿度 %','交接事项','交接人']
     frow = 0
 
     for col in range(len(cols)):

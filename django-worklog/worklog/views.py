@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from worklog_web.models import *
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 import hashlib
 
 # Create your views here.
@@ -20,11 +20,12 @@ def login(request):
         try:
             db_userinfo=Userinfo.objects.get(id=userid)
         except Exception as e:
-            print('--工号错误 %s'%(e))
-            return HttpResponse('工号或密码错误')
+            message='工号或密码错误'
+            return render(request,'messagepage.html',locals())
 
         if not db_userinfo.is_active:
-            return HttpResponse('账号被禁用，联系管理员解禁')
+            message='工号被禁用'
+            return render(request,'messagepage.html',locals())
 
         #比对工号和密码正确则登录到mainpage
         if userid==db_userinfo.id and userpsw==db_userinfo.password:
@@ -64,10 +65,12 @@ def signpage(request):
 
         #判断两次输入的密码是否一致
         if userpsw!=pswcfm:
-            return HttpResponse('两次密码不一致')
+            message='两次密码不一致'
+            return render(request,'messagepage.html',locals())
 
         if username=='' or usersex=='' or userpsw=='' or pswcfm=='' or userks=='' or userduty=='':
-            return HttpResponse('所填信息不能为空')
+            message='所填信息不能为空'
+            return render(request,'messagepage.html',locals())
 
         #判断工号是否重复，该方式解决不了高并发
         # if Userinfo.objects.filter(id=userid):
@@ -83,7 +86,8 @@ def signpage(request):
             user=Userinfo.objects.create(id=userid,name=username,sex=usersex,password=userpsw,keshi=userks,duty=userduty)
         except Exception as e:
             print('--create user error %s'%(e))
-            return HttpResponse('工号已注册')
+            message='工号已注册'
+            return render(request,'messagepage.html',locals())
 
         #存储session
         # request.session['id']=user.id
