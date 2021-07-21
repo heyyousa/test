@@ -106,6 +106,7 @@ body {
     height: 35px;
     color: white;
     border-radius: 20px;
+    font-size: 16px;
     background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
 }
 
@@ -116,6 +117,7 @@ body {
     margin-top: 50px;
     margin-left: 75px;
     text-align: center;
+    
 }
 
 .inputbutton {
@@ -123,6 +125,7 @@ body {
     width: 130px;
     height: 35px;
     margin-left: 80px;
+    
 }
 
 .usericon {

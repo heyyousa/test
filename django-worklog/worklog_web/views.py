@@ -216,6 +216,11 @@ def usercheck(request):
         userduty=request.POST.get('duty')
         useractive=request.POST.get('is_active')
 
+        if useractive=='是':
+            useractive='True'
+        elif useractive=='否':
+            useractive='False'
+
         q=Q()
         if userid!='':
             q &= Q(id=userid)
