@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'worklog_web/css/zhibanpage.css' %}" />
+    <link rel="stylesheet" href="{% static 'worklog_web/css/zhibanuppage.css' %}" />
     <link rel="shortcut icon" href="{% static 'worklog_web/img/favicon.ico' %}" />
-    <title>值班表</title>
+    <title>值班表上传</title>
 </head>
 
 <body>
@@ -31,7 +31,7 @@
                             <a href="/worklog_web/svlogckpage">巡检查询</a>
                         </li>
                         <li>
-                            <a href="/worklog_web/zhibanpage" style="color:red">值班表</a>
+                            <a href="/worklog_web/zhibanuppage" style="color:red">值班表上传</a>
                         </li>
                         <li>
                             <a href="/worklog_web/logout">注销</a>
@@ -47,7 +47,14 @@
     </div>
     <div style="width: 1900px;">
         <div class="logbox">
-
+            <form action="/worklog_web/upload_zb/" method="POST" enctype="multipart/form-data">
+                <p>
+                    <input type="file" id="up" name="zbpic">
+                </p>
+                <p>
+                    <input type="submit" value="上传">
+                </p>
+            </form>
         </div>
         <div class="picbox">
             <img src="../../media/zhiban.png" alt="">

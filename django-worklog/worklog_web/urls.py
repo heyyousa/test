@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 from worklog_web import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -24,10 +26,11 @@ urlpatterns = [
     path('ckwlexcel/',views.ckwlexcel),  # 查询后日志导出excel功能
     path('allwlexcel/',views.allwlexcel),  # 全部日志页面导出excel功能
     path('svlogexcel/',views.svlogexcel),  # 机房巡检记录导出excel功能
-    path('zhiban/', views.zhiban),  # 值班表
-
-
+    path('zhibanpage/', views.zhibanpage),  # 值班表
+    path('upload_zb/',views.upload_zb),  # 上传值班图片功能
+    path('zhibanuppage/',views.zhibanuppage),  # 值班表上传页面
 
     path('test/',views.test),  # 测试函数
 
 ]
+

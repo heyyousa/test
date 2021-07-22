@@ -3,10 +3,13 @@ from worklog_web.models import *
 from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Q
 from django.utils.http import urlquote
+from django.conf import settings
 import datetime
 import pandas as pd
 import xlwt
 import xlrd
+import os
+
 
 # Create your views here.
 
@@ -78,6 +81,10 @@ def create_log(request):
         userwlfst = request.POST.get('fisstatu')
         userwlnote = request.POST.get('note')
 
+        if userwlks=='' or userwlqsort=='' or userwlqdsb=='' or userwlfst=='':
+            message='有必填项未填'
+            return render(request,'worklog_web/messagepage.html',locals())
+
         try:
             Userworklog.objects.create(id=userwlid,index=userwlindex,date=userwldate,needs=userwlneeds,place=userwlks,qsort=userwlqsort,qdescribe=userwlqdsb,fisstatu=userwlfst,note=userwlnote,ct_operator=user.name)
         except Exception as e:
@@ -86,7 +93,6 @@ def create_log(request):
             return render(request, 'worklog_web/messagepage.html', locals())
 
         return redirect('/worklog_web/mainpage')
-        #render(request,'worklog_web/mainpage.html',locals())
 
 
 #注销登录
@@ -638,10 +644,36 @@ def svlogexcel(request):
 
 #值班表
 @checklogin
-def zhiban(request):
-    zb=pd.read_excel('worklog_web/zhiban/zhiban.xls')
-    zb_html=zb.to_html()
+def zhibanpage(request):
+    user=uinfo(request)
     return render(request,'worklog_web/zhibanpage.html',locals())
+
+
+#值班表上传页面
+@checklogin
+def zhibanuppage(request):
+    user=uinfo(request)
+    return render(request,'worklog_web/zhibanuppage.html',locals())
+
+
+#上传值班表图片
+@checklogin
+def upload_zb(request):
+    try:
+        zbfile = request.FILES['zbpic']
+    except Exception as e:
+        print('--未选择上传文件%s'%(e))
+        message='请选择要上传的图片'
+        return render(request,'worklog_web/messagepage.html',locals())
+
+    filepath=os.path.join(settings.MEDIA_ROOT,zbfile.name)
+
+    with open(filepath,'wb') as f:
+        data=zbfile.file.read()
+        f.write(data)
+    message='上传成功'
+    return render(request,'worklog_web/messagepage.html',locals())
+
 
 
 

@@ -14,7 +14,7 @@
     <div class="topbox float">
         <div class="logo float">
             <span>
-                <a href="/worklog_web/mainpage">沧县医院</a>
+                <a href="/worklog_web/mainpage" style="color:red">沧县医院</a>
             </span>
         </div>
         <div class="float">
@@ -31,7 +31,7 @@
                             <a href="/worklog_web/svlogckpage">巡检查询</a>
                         </li>
                         <li>
-                            <a href="/worklog_web/zhiban">值班表</a>
+                            <a href="/worklog_web/zhibanpage">值班表</a>
                         </li>
                         <li>
                             <a href="/worklog_web/logout">注销</a>
@@ -50,7 +50,7 @@
             <form class="logtext" style="width: 450px" action="/worklog_web/create_log/" method="POST">
                 <div class="loginput">
                     <label for="date">日期</label>
-                    <input type="text" name="date" id="date" placeholder="例：2100-1-1">
+                    <input type="text" name="date" id="date" placeholder="例：2100-1-1，默认今日">
                 </div>
                 <div class="loginput">
                     <label for="need">系统需求</label>

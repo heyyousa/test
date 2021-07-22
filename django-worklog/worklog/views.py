@@ -35,7 +35,8 @@ def login(request):
             resp.set_cookie('userpsw',user.password,2)
             return resp
         else:
-            return render(request,'login2.html')
+            message='账号或密码有误'
+            return render(request,'messagepage.html',locals())
 
     elif request.method=="GET":
         #检查session登陆状态,本项目不适用保存登录状态

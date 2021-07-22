@@ -48,7 +48,7 @@ body a:link {
     text-decoration: none;
 }
 
-body :visited {
+body a:visited {
     color: white;
 }
 
