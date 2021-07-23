@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.db.models import Q
 from django.utils.http import urlquote
 from django.conf import settings
+from django.core import mail
 import datetime
 import pandas as pd
 import xlwt
@@ -693,3 +694,5 @@ def test(request):
     users=Userinfo.objects.filter(q)
     print(users)
     return render(request,'worklog_web/test.html',locals())
+
+#diltmqiwpajobjec

@@ -141,3 +141,11 @@ SESSION_COOKIE_AGE=60*60*24
 # 用户上传文件的访问配置
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+# 邮件配置（已配置好，接通外网去掉注释符就能用）
+# EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST='smtp.qq.com'  # 对应邮箱的smtp服务器地址
+# EMAIL_PORT=25  # smtp服务的端口号
+# EMAIL_HOST_USER='530877640@qq.com'  # 发送邮件的QQ邮箱
+# EMAIL_HOST_PASSWORD='diltmqiwpajobjec'  # 填入授权码
+# EMAIL_USE_TLS=False  # 与SMTP服务器通信时，是否启动TLS链接（安全链接）默认False
