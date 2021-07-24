@@ -12,12 +12,16 @@ body {
 }
 
 .topbox {
+    position: fixed;
+    z-index: 9999;
     background-color: #00000080;
     width: 100%;
     height: 90px;
 }
 
 .menubox {
+    position: fixed;
+    z-index: 9999;
     height: auto;
     width: 1600px;
     margin-left: 0;
@@ -115,6 +119,7 @@ label {
 .picbox {
     display: inline-block;
     position: absolute;
+    top: 80px;
     width: 1000px;
     height: 720px;
     margin-top: 50px;
